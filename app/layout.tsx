@@ -3,21 +3,17 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "ArcJobs — Onchain Freelance Marketplace",
-  description: "Post jobs, escrow USDC, release payment on delivery. Powered by ERC-8183 on Arc.",
+  description: "Post jobs, escrow USDC, release payment on delivery. Powered by ERC-8183 on Arc testnet.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.variable} suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
     </html>
