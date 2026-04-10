@@ -12,20 +12,43 @@ export default function Home() {
   const { disconnect } = useDisconnect();
   const [activeTab, setActiveTab] = useState<"board" | "post">("board");
 
+  const goToBoard = () => {
+    setActiveTab("board");
+    // If already connected, just make sure board tab is active (handled above)
+    // If not connected, scroll to the connect section smoothly
+    if (!isConnected) {
+      const el = document.getElementById("connect-section");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const goHome = () => {
+    setActiveTab("board");
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <main style={{ minHeight: "100vh", background: "#f8f7f4", fontFamily: "Inter, -apple-system, sans-serif" }}>
 
+      {/* NAV */}
       <nav style={{ background: "rgba(248,247,244,0.85)", backdropFilter: "blur(12px)", borderBottom: "1px solid #e8e4de", padding: "0 32px", height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 50 }}>
         <div style={{ display: "flex", alignItems: "center", gap: "32px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+
+          {/* LOGO — always clickable, goes home, wallet stays connected */}
+          <button
+            onClick={goHome}
+            style={{ display: "flex", alignItems: "center", gap: "10px", background: "none", border: "none", cursor: "pointer", padding: "4px 0" }}
+          >
             <div style={{ width: "32px", height: "32px", background: "linear-gradient(135deg, #6366f1, #8b5cf6)", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(99,102,241,0.3)" }}>
               <span style={{ color: "white", fontSize: "13px", fontWeight: 800 }}>AJ</span>
             </div>
-            <div>
+            <div style={{ textAlign: "left" }}>
               <span style={{ color: "#1c1917", fontWeight: 700, fontSize: "15px", letterSpacing: "-0.3px" }}>ArcJobs</span>
               <span style={{ color: "#a8a29e", fontSize: "11px", marginLeft: "6px" }}>testnet</span>
             </div>
-          </div>
+          </button>
+
           <div style={{ display: "flex", gap: "4px" }}>
             {["Explorer", "Contract"].map((item) => (
               <a key={item} href={item === "Explorer" ? "https://testnet.arcscan.app" : "https://testnet.arcscan.app/address/0x63cEc4e9AeA0F94E149C9df598c54DdB2C5128c7"} target="_blank" rel="noopener noreferrer" style={{ color: "#78716c", fontSize: "13px", fontWeight: 500, padding: "6px 10px", borderRadius: "6px", textDecoration: "none" }}>
@@ -73,10 +96,13 @@ export default function Home() {
                 Post a job, lock USDC in an ERC-8183 escrow contract on Arc, release payment the moment work is approved. No platform fees. No middlemen. 0.4 second finality.
               </p>
               <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                <button onClick={() => connect({ connector: injected() })} style={{ background: "#6366f1", color: "white", border: "none", fontSize: "15px", fontWeight: 700, padding: "14px 28px", borderRadius: "12px", cursor: "pointer", boxShadow: "0 4px 14px rgba(99,102,241,0.35)", letterSpacing: "-0.3px" }}>
+                {/* START HIRING — only scrolls to connect section, never triggers wallet */}
+                <button
+                  onClick={goToBoard}
+                  style={{ background: "#6366f1", color: "white", border: "none", fontSize: "15px", fontWeight: 700, padding: "14px 28px", borderRadius: "12px", cursor: "pointer", boxShadow: "0 4px 14px rgba(99,102,241,0.35)", letterSpacing: "-0.3px" }}
+                >
                   Start hiring →
                 </button>
-                
               </div>
             </div>
 
@@ -144,8 +170,8 @@ export default function Home() {
               </div>
             </div>
 
-            {/* CTA */}
-            <div style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)", borderRadius: "18px", padding: "48px", marginBottom: "64px", textAlign: "center" }}>
+            {/* CTA — anchor point for Start Hiring scroll */}
+            <div id="connect-section" style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)", borderRadius: "18px", padding: "48px", marginBottom: "64px", textAlign: "center" }}>
               <h3 style={{ color: "white", fontSize: "28px", fontWeight: 800, letterSpacing: "-0.8px", marginBottom: "10px" }}>Ready to hire onchain?</h3>
               <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "15px", marginBottom: "28px" }}>Connect your wallet and post your first job in 60 seconds.</p>
               <button onClick={() => connect({ connector: injected() })} style={{ background: "white", color: "#6366f1", border: "none", fontSize: "14px", fontWeight: 700, padding: "13px 28px", borderRadius: "10px", cursor: "pointer" }}>
