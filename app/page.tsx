@@ -27,8 +27,8 @@ export default function Home() {
             </div>
           </div>
           <div style={{ display: "flex", gap: "4px" }}>
-            {["Docs", "GitHub", "ArcScan"].map((item) => (
-              <a key={item} href={item === "ArcScan" ? "https://testnet.arcscan.app" : item === "GitHub" ? "https://github.com/Temmygabriel/arcjobs" : "https://docs.arc.network"} target="_blank" rel="noopener noreferrer" style={{ color: "#78716c", fontSize: "13px", fontWeight: 500, padding: "6px 10px", borderRadius: "6px", textDecoration: "none" }}>
+            {["Explorer", "Contract"].map((item) => (
+              <a key={item} href={item === "Explorer" ? "https://testnet.arcscan.app" : "https://testnet.arcscan.app/address/0x63cEc4e9AeA0F94E149C9df598c54DdB2C5128c7"} target="_blank" rel="noopener noreferrer" style={{ color: "#78716c", fontSize: "13px", fontWeight: 500, padding: "6px 10px", borderRadius: "6px", textDecoration: "none" }}>
                 {item}
               </a>
             ))}
@@ -76,9 +76,7 @@ export default function Home() {
                 <button onClick={() => connect({ connector: injected() })} style={{ background: "#6366f1", color: "white", border: "none", fontSize: "15px", fontWeight: 700, padding: "14px 28px", borderRadius: "12px", cursor: "pointer", boxShadow: "0 4px 14px rgba(99,102,241,0.35)", letterSpacing: "-0.3px" }}>
                   Start hiring →
                 </button>
-                <a href="https://github.com/Temmygabriel/arcjobs" target="_blank" rel="noopener noreferrer" style={{ color: "#78716c", fontSize: "14px", fontWeight: 500, textDecoration: "none", display: "flex", alignItems: "center", gap: "6px" }}>
-                  View source ↗
-                </a>
+                
               </div>
             </div>
 
