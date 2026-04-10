@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ArcJobs
 
-## Getting Started
+A freelance marketplace where the smart contract is the entire platform.
 
-First, run the development server:
+Clients post jobs. USDC locks in escrow. Freelancers submit work. Clients approve. Payment releases in under 500ms on Arc testnet.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+No database. No platform fee. No company holding your money.
+
+Built on ERC-8183, Circle and Arc's open standard for the agentic economy, which shipped March 31, 2026. ArcJobs is one of the first full-stack applications built on it.
+
+- **Live:** https://arcjobs-frontend.vercel.app
+- **Contract:** `0x63cEc4e9AeA0F94E149C9df598c54DdB2C5128c7`
+- **Network:** Arc Testnet (Chain ID 1319718)
+- **Explorer:** https://testnet.arcscan.app/address/0x63cEc4e9AeA0F94E149C9df598c54DdB2C5128c7
+
+---
+
+## How it works
+
+A job moves through five states: Open → Funded → Submitted → Completed (or Rejected). Each transition is a transaction on Arc. The contract enforces who can call what — only the client funds, only the provider submits, only the evaluator completes.
+
+When a job completes, the ERC-8183 contract releases USDC directly to the provider's wallet. No withdrawal step. No waiting period.
+
+```
+0: Open → 1: Funded → 2: Submitted → 3: Completed
+                                    ↘ 4: Rejected
+             ↘ 5: Expired
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Why Arc
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+USDC is the gas token on Arc, so you pay transaction fees in the same asset you're settling work in. No ETH balance to maintain. No mental math on fee denomination.
 
-## Learn More
+Malachite consensus gives deterministic finality. The money either moved or it didn't — you know in milliseconds, not minutes. For a payments product, that's the whole game.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Running locally
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Contracts
 
-## Deploy on Vercel
+```bash
+cd arcjobs
+cp .env.example .env   # fill in your RPC URL and private keys
+forge build
+forge test
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Requires [Foundry](https://getfoundry.sh/).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Requires Node 18+. Open http://localhost:3000.
+
+**MetaMask setup for Arc Testnet:**
+
+| Field | Value |
+|---|---|
+| Network name | Arc Testnet |
+| RPC URL | https://rpc.testnet.arc.network |
+| Chain ID | 1319718 |
+| Currency symbol | USDC |
+
+---
+
+## Contract addresses
+
+| | Address |
+|---|---|
+| Proxy | `0x63cEc4e9AeA0F94E149C9df598c54DdB2C5128c7` |
+| Implementation | `0x86D7c626AfF210c2f60970a0eb4Dc3ddbEF03CE5` |
+| USDC (testnet) | `0x3600000000000000000000000000000000000000` |
+
+---
+
+## Key files
+
+```
+frontend/
+├── app/
+│   ├── page.tsx          — landing + app view, nav, wallet connect
+│   ├── layout.tsx        — root layout with Providers
+│   └── providers.tsx     — WagmiProvider + QueryClientProvider
+├── components/
+│   ├── JobBoard.tsx      — reads all jobs, renders cards and modals
+│   └── PostJob.tsx       — form to post new jobs onchain
+└── lib/
+    ├── contract.ts       — ABI, addresses, Arc chain config
+    └── wagmi.ts          — wagmi config
+```
+
+---
+
+## ERC-8183
+
+ERC-8183 is the AgenticCommerce standard built by Circle and Arc. It defines Jobs as escrowed, verifiable, onchain work between parties. ArcJobs is one of the first full-stack applications built on it.
+
+Read the standard: https://arc.network
+
+---
+
+Built by [@Temmygabriel](https://github.com/Temmygabriel) — April 2026.
